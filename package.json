@@ -1,0 +1,26 @@
+{
+    "name": "eojuk",
+    "version": "0.0.1",
+    "description": "",
+    "keywords": [
+        "console",
+        "log"
+    ],
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/myyrakle/eojuk.git"
+    },
+    "author": {
+        "name": "myyrakle",
+        "email": "sssang97@naver.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/myyrakle/eojuk/issues"
+    },
+    "homepage": "https://github.com/myyrakle/eojuk#readme"
+}
