@@ -22,5 +22,8 @@
     "bugs": {
         "url": "https://github.com/myyrakle/eojuk/issues"
     },
-    "homepage": "https://github.com/myyrakle/eojuk#readme"
+    "homepage": "https://github.com/myyrakle/eojuk#readme",
+    "dependencies": {
+        "chalk": "^4.1.0"
+    }
 }
