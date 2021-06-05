@@ -24,6 +24,6 @@
     },
     "homepage": "https://github.com/myyrakle/eojuk#readme",
     "dependencies": {
-        "chalk": "^4.1.0"
+        "node-sql-parser": "^3.6.0"
     }
 }
