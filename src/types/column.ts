@@ -7,8 +7,3 @@ export default interface Column {
     is_not_null: string;
     is_pk: string;
 }
-
-export default interface Table {
-    tableName: string;
-    columns: Column[];
-}
