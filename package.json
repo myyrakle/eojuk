@@ -14,7 +14,8 @@
         "build": "tsc",
         "start": "tsc | node ./dist/main",
         "debug": "tsc | node --inspect ./dist/main",
-        "watch": "tsc --watch -p ./src "
+        "dev": "tsc --watch -p ./src | node --inspect ./dist/main",
+        "watch": "tsc --watch "
     },
     "repository": {
         "type": "git",

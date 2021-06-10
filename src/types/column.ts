@@ -1,9 +1,11 @@
 // 각 컬럼 타입
 export default interface Column {
-    name: string;
-    comment: string;
-    db_type: string;
-    js_type: string;
-    is_not_null: string;
-    is_pk: string;
+    name: string; // 컬럼명
+    dbType: string; // 실제 데이터베이스 타입
+    tsType: string; // 매핑할 코드 타입
+    isNotNull: boolean; // Not Null 여부
+    isPrimaryKey: boolean; // 기본키 여부
+    default: string; // 디폴트값
+    comment?: string; // 코멘트
+    isAutoIncrement?: boolean; //
 }

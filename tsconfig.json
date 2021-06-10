@@ -61,5 +61,19 @@
       /* Experimental Options */
       // "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
       // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
+    },
+    "watchOptions": {
+      // Use native file system events for files and directories
+      "watchFile": "useFsEvents",
+      "watchDirectory": "useFsEvents",
+      // Poll files for updates more frequently
+      // when they're updated a lot.
+      "fallbackPolling": "dynamicPriority",
+      // Don't coalesce watch notification
+      "synchronousWatchDirectory": true,
+      // Finally, two additional settings for reducing the amount of possible
+      // files to track  work from these directories
+      "excludeDirectories": ["**/node_modules", "_build"],
+      "excludeFiles": ["build/fileWhichChangesOfent.ts"]
     }
-  }
+ }   
