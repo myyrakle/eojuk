@@ -5,6 +5,7 @@ const query = `
 CREATE TABLE "tb_user" (
 	"user_no"	serial8		NOT NULL,
 	"reg_date"	timestamptz	DEFAULT CURRENT_TIMESTAMP	NOT NULL,
+	"foo"	 varchar(100)	DEFAULT ''	NOT NULL,
 	"complete_yn"	boolean	DEFAULT false	NOT NULL
 );
 
@@ -34,6 +35,8 @@ console.log("으악");
 
 const parser = new PostgreSQLParser();
 const tables = parser.parse(query);
+
+console.log(JSON.stringify(tables));
 
 const emitter = new SequelizeTypescriptEmitter();
 const result = emitter.emit(tables);

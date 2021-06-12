@@ -1,6 +1,13 @@
 import IParser from "../types/parser";
 import Table from "../types/table";
-import { parseWithComments, parse } from "pgsql-ast-parser";
+import {
+    parseWithComments,
+    parse as astParse,
+    Statement,
+    CreateTableStatement,
+    CommentStatement,
+    AlterTableStatement,
+} from "pgsql-ast-parser";
 import Column from "../types/column";
 
 export default class PostgreSQLParser implements IParser {
@@ -47,76 +54,17 @@ export default class PostgreSQLParser implements IParser {
     }
 
     parse(sql: string): Table[] {
-        const parsedList = parse(sql);
+        const parsedList = astParse(sql);
 
         const tables: Table[] = [];
 
         for (const node of parsedList) {
             switch (node.type) {
                 case "create table":
-                    const table: Table = {
-                        tableName: node?.name?.name,
-                        columns: [],
-                    };
-
-                    for (const nodeOfTable of node.columns) {
-                        switch (nodeOfTable.kind) {
-                            case "column":
-                                const columnName = nodeOfTable?.name?.name;
-                                const dbType = (nodeOfTable?.dataType as any)
-                                    ?.name;
-                                const normalizedDbType =
-                                    this.normalizeDbType(dbType);
-                                const isAutoIncrement =
-                                    this.checkAutoIncrement(dbType);
-
-                                let isNotNull = false;
-                                let isPrimaryKey = false;
-                                let defaultValue = null;
-
-                                for (const nodeOfConstraints of nodeOfTable?.constraints) {
-                                    switch (nodeOfConstraints.type) {
-                                        case "not null":
-                                            isNotNull = true;
-                                            break;
-                                        case "default":
-                                            defaultValue = (
-                                                nodeOfConstraints?.default as any
-                                            )?.keyword;
-                                    }
-                                }
-                                const column: Column = {
-                                    name: nodeOfTable?.name?.name,
-                                    dbType: normalizedDbType,
-                                    tsType: this.convertDbTypeToTsType(
-                                        normalizedDbType
-                                    ),
-                                    isNotNull,
-                                    isPrimaryKey,
-                                    default: defaultValue,
-                                    isAutoIncrement,
-                                };
-                                table.columns.push(column);
-                                break;
-                            default:
-                        }
-                    }
-
-                    tables.push(table);
+                    tables.push(this.parseTable(node));
                     break;
                 case "comment":
-                    const commentContents = node?.comment;
-                    const commentTableName = (node?.on as any)?.column?.table;
-                    const commentColumnName = (node?.on as any)?.column?.column;
-                    const targetColumn: Column = tables
-                        .find((e) => e.tableName === commentTableName)
-                        ?.columns?.find((e) => e.name === commentColumnName);
-
-                    if (targetColumn) {
-                        targetColumn.comment = commentContents;
-                    }
-
-                    console.log(node);
+                    this.parseComment(node, tables);
                     break;
 
                 case "alter table":
@@ -124,21 +72,96 @@ export default class PostgreSQLParser implements IParser {
                         (node?.change as any)?.constraint?.type ===
                         "primary key"
                     ) {
-                        const columnNames = (
-                            node?.change as any
-                        )?.constraint?.columns?.map((e: any) => e?.name);
-
-                        const pkName = (node?.change as any)?.constraint
-                            ?.constraintName?.name;
+                        this.parsePrimaryKey(node, tables);
                     }
                     break;
 
                 default:
+                    console.log("예외 케이스");
                     console.log(node);
                     break;
             }
         }
 
-        return [];
+        return tables;
+    }
+
+    parseTable(node: CreateTableStatement): Table {
+        const table: Table = {
+            tableName: node?.name?.name,
+            columns: [],
+        };
+
+        for (const nodeOfTable of node.columns) {
+            switch (nodeOfTable.kind) {
+                case "column":
+                    const columnName = nodeOfTable?.name?.name;
+                    const dbType = (nodeOfTable?.dataType as any)?.name;
+                    const normalizedDbType = this.normalizeDbType(dbType);
+                    const isAutoIncrement = this.checkAutoIncrement(dbType);
+
+                    let isNotNull = false;
+                    let isPrimaryKey = false;
+                    let defaultValue = null;
+
+                    for (const nodeOfConstraints of nodeOfTable?.constraints) {
+                        switch (nodeOfConstraints.type) {
+                            case "not null":
+                                isNotNull = true;
+                                break;
+                            case "default":
+                                defaultValue = (
+                                    nodeOfConstraints?.default as any
+                                )?.keyword;
+                        }
+                    }
+                    const column: Column = {
+                        name: columnName,
+                        dbType: normalizedDbType,
+                        tsType: this.convertDbTypeToTsType(normalizedDbType),
+                        isNotNull,
+                        isPrimaryKey,
+                        default: defaultValue,
+                        isAutoIncrement,
+                        comment: "",
+                    };
+                    table.columns.push(column);
+                    break;
+                default:
+            }
+        }
+
+        return table;
+    }
+
+    parseComment(node: CommentStatement, tables: Table[]) {
+        const commentContents = node?.comment;
+        const commentTargetTableName = (node?.on as any)?.column?.table;
+        const commentTargetColumnName = (node?.on as any)?.column?.column;
+        const commenttargetColumn: Column = tables
+            .find((e) => e.tableName === commentTargetTableName)
+            ?.columns?.find((e) => e.name === commentTargetColumnName);
+
+        if (commenttargetColumn) {
+            commenttargetColumn.comment = commentContents;
+        }
+    }
+
+    parsePrimaryKey(node: AlterTableStatement, tables: Table[]) {
+        const pkTargetColumnNames = (
+            node?.change as any
+        )?.constraint?.columns?.map((e: any) => e?.name);
+        const pkTargetTableName = node?.table?.name;
+
+        // not use
+        const _pkName = (node?.change as any)?.constraint?.constraintName?.name;
+
+        tables
+            .find((e) => e.tableName === pkTargetTableName)
+            ?.columns?.forEach((e) => {
+                if (pkTargetColumnNames.includes(e.name)) {
+                    e.isPrimaryKey = true;
+                }
+            });
     }
 }
