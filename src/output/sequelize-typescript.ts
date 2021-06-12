@@ -32,19 +32,24 @@ import {
 `;
 
 export default class SequelizeTypescriptEmitter implements IEmmiter {
+    // 컬럼 필드 코드 생성
     private generateColumn(column: Column) {
-        const primaryKey = column.isPrimaryKey ? "primaryKey: true, " : "";
+        const primaryKey = column.isPrimaryKey ? "primaryKey: true, \n\t" : "";
         const autoIncrement = column.isAutoIncrement
-            ? "autoIncrement: true, "
+            ? "autoIncrement: true, \n\t"
+            : "";
+        const defaultValue = column.default
+            ? `\n\tdefault: litreal("${column.default.replace('"', '\\"')}"),`
             : "";
         return `    @Comment(\`${column.comment}\`)
     @Column({
         ${primaryKey}${autoIncrement}type: ${column.dbType}, 
-        allowNull: ${!column.isNotNull},
+        allowNull: ${!column.isNotNull},${defaultValue}
     })
     ${column.name}: ${column.tsType};`;
     }
 
+    // 테이블 클래스 코드 생성
     private generateTableCode(table: Table) {
         return `@Table({
     tableName: '${table.tableName}',
