@@ -25,6 +25,10 @@ COMMENT ON COLUMN "tb_user"."device_type" IS 'PC인지 모바일인지';
 COMMENT ON COLUMN "tb_user"."reg_date" IS '등록일시';
 
 COMMENT ON COLUMN "tb_user"."complete_yn" IS '다 풀었는지';
+
+ALTER TABLE "tb_user" ADD CONSTRAINT "PK_TB_USER" PRIMARY KEY (
+	"user_no"
+);
 `;
 console.log("으악");
 

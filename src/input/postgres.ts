@@ -84,7 +84,6 @@ export default class PostgreSQLParser implements IParser {
                                                 nodeOfConstraints?.default as any
                                             )?.keyword;
                                     }
-                                    console.log(nodeOfConstraints);
                                 }
                                 const column: Column = {
                                     name: nodeOfTable?.name?.name,
@@ -100,13 +99,42 @@ export default class PostgreSQLParser implements IParser {
                                 table.columns.push(column);
                                 break;
                             default:
-                            //console.log()
                         }
                     }
 
                     tables.push(table);
                     break;
                 case "comment":
+                    const commentContents = node?.comment;
+                    const commentTableName = (node?.on as any)?.column?.table;
+                    const commentColumnName = (node?.on as any)?.column?.column;
+                    const targetColumn: Column = tables
+                        .find((e) => e.tableName === commentTableName)
+                        ?.columns?.find((e) => e.name === commentColumnName);
+
+                    if (targetColumn) {
+                        targetColumn.comment = commentContents;
+                    }
+
+                    console.log(node);
+                    break;
+
+                case "alter table":
+                    if (
+                        (node?.change as any)?.constraint?.type ===
+                        "primary key"
+                    ) {
+                        const columnNames = (
+                            node?.change as any
+                        )?.constraint?.columns?.map((e: any) => e?.name);
+
+                        const pkName = (node?.change as any)?.constraint
+                            ?.constraintName?.name;
+                    }
+                    break;
+
+                default:
+                    console.log(node);
                     break;
             }
         }

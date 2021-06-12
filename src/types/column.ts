@@ -5,7 +5,7 @@ export default interface Column {
     tsType: string; // 매핑할 코드 타입
     isNotNull: boolean; // Not Null 여부
     isPrimaryKey: boolean; // 기본키 여부
-    default: string; // 디폴트값
+    default?: string; // 디폴트값
     comment?: string; // 코멘트
-    isAutoIncrement?: boolean; //
+    isAutoIncrement?: boolean; // 자동 증가 컬럼 여부
 }
