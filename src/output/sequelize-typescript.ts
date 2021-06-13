@@ -3,6 +3,7 @@ import { SSL_OP_TLS_BLOCK_PADDING_BUG } from "constants";
 import Column from "../types/column";
 import IEmitOption from "../types/emit-option";
 import IEmmiter from "../types/emitter";
+import Source from "../types/source";
 import Table from "../types/table";
 
 const importTemplate = `
@@ -66,10 +67,23 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
 }`;
     }
 
-    emit(tables: Table[], option?: IEmitOption): string {
-        return (
-            importTemplate +
-            tables.map((table) => this.generateTableCode(table)).join("\n\n")
-        );
+    emit(tables: Table[], option?: IEmitOption): Source[] {
+        if (option?.sourceSplit) {
+            return tables.map((table) => ({
+                sourceName: table.tableName,
+                source: importTemplate + this.generateTableCode(table),
+            }));
+        } else {
+            return [
+                {
+                    sourceName: "all",
+                    source:
+                        importTemplate +
+                        tables
+                            .map((table) => this.generateTableCode(table))
+                            .join("\n\n"),
+                },
+            ];
+        }
     }
 }
