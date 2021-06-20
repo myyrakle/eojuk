@@ -1,6 +1,6 @@
 {
     "name": "eojuk",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "",
     "keywords": [
         "mysql",
@@ -11,9 +11,9 @@
     "main": "./dist/index",
     "typings": "./dist/",
     "bin": {
-        "eojuk":"./src/dist/main"
+        "eojuk": "./dist/main.js"
     },
-    "script,": {
+    "scripts": {
         "build": "tsc",
         "start": "tsc | node ./dist/main",
         "debug": "tsc | node --inspect ./dist/main",

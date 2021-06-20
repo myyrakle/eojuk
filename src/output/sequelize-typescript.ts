@@ -91,13 +91,7 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
 }`;
     }
 
-    emit(
-        tables: Table[],
-        option: Option
-        
-        
-        = { sourceSplit: true }
-    ): Source[] {
+    emit(tables: Table[], option: Option = { sourceSplit: true }): Source[] {
         if (option?.sourceSplit) {
             return tables.map((table) => ({
                 sourceName: table.tableName,

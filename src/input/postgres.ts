@@ -13,12 +13,15 @@ import Column from "../types/column";
 export default class PostgreSQLParser implements IParser {
     constructor() {}
 
+    // Auto Increment에 해당하는 타입인지 체크
+    // postgres의 경우에는 시퀀스를 자동 생성해주는 타입
     private checkAutoIncrement(typename: string): boolean {
         return ["serial", "serial8", "bigserial"].includes(
             typename.toLowerCase()
         );
     }
 
+    // 데이터베이스 타입 일반화
     private normalizeDbType(typename: string): string {
         if (typename.toLowerCase() === "serial") {
             return "int";
@@ -29,6 +32,7 @@ export default class PostgreSQLParser implements IParser {
         }
     }
 
+    // 데이터베이스의 컬럼타입을 타입스크립트 타입으로 변환
     private convertDbTypeToTsType(typename: string): string {
         if (["text", "varchar"].includes(typename.toLocaleLowerCase())) {
             return "string";
@@ -53,6 +57,7 @@ export default class PostgreSQLParser implements IParser {
         }
     }
 
+    // 파싱
     parse(sql: string): Table[] {
         const parsedList = astParse(sql);
 
@@ -86,6 +91,7 @@ export default class PostgreSQLParser implements IParser {
         return tables;
     }
 
+    // 테이블 구성 분석
     parseTable(node: CreateTableStatement): Table {
         const table: Table = {
             tableName: node?.name?.name,
@@ -134,6 +140,7 @@ export default class PostgreSQLParser implements IParser {
         return table;
     }
 
+    // 코멘트 분석
     parseComment(node: CommentStatement, tables: Table[]) {
         const commentContents = node?.comment;
         const commentTargetTableName = (node?.on as any)?.column?.table;
@@ -147,6 +154,7 @@ export default class PostgreSQLParser implements IParser {
         }
     }
 
+    // 기본키 분석
     parsePrimaryKey(node: AlterTableStatement, tables: Table[]) {
         const pkTargetColumnNames = (
             node?.change as any
