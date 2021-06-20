@@ -5,6 +5,7 @@ import IEmitOption from "../types/emit-option";
 import IEmmiter from "../types/emitter";
 import Source from "../types/source";
 import Table from "../types/table";
+import Option from "../types/emit-option";
 
 const importTemplate = `
 import { literal } from 'sequelize';
@@ -33,18 +34,41 @@ import {
 `;
 
 export default class SequelizeTypescriptEmitter implements IEmmiter {
+    private dbTypeToDataType(dbtype: string): string {
+        if (["varchar", "text", "char"].includes(dbtype.toLowerCase())) {
+            return "DataType.STRING";
+        } else if (["bool", "boolean"].includes(dbtype.toLowerCase())) {
+            return "DataType.BOOLEAN";
+        } else if (["uuid"].includes(dbtype.toLowerCase())) {
+            return "DataType.UUID";
+        } else if (
+            ["int", "int2", "int4", "int8", "bigint"].includes(
+                dbtype.toLowerCase()
+            )
+        ) {
+            return "DataType.INTEGER";
+        } else {
+            return `'${dbtype}'`;
+        }
+    }
+
     // 컬럼 필드 코드 생성
     private generateColumn(column: Column) {
         const primaryKey = column.isPrimaryKey ? "primaryKey: true, \n\t" : "";
+
         const autoIncrement = column.isAutoIncrement
             ? "autoIncrement: true, \n\t"
             : "";
+
         const defaultValue = column.default
             ? `\n\tdefault: litreal("${column.default.replace('"', '\\"')}"),`
             : "";
+
+        const dataType = this.dbTypeToDataType(column.dbType);
+
         return `    @Comment(\`${column.comment}\`)
     @Column({
-        ${primaryKey}${autoIncrement}type: ${column.dbType}, 
+        ${primaryKey}${autoIncrement}type: ${dataType}, 
         allowNull: ${!column.isNotNull},${defaultValue}
     })
     ${column.name}: ${column.tsType};`;
@@ -67,7 +91,13 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
 }`;
     }
 
-    emit(tables: Table[], option?: IEmitOption): Source[] {
+    emit(
+        tables: Table[],
+        option: Option
+        
+        
+        = { sourceSplit: true }
+    ): Source[] {
         if (option?.sourceSplit) {
             return tables.map((table) => ({
                 sourceName: table.tableName,

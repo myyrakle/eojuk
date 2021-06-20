@@ -10,7 +10,10 @@
     ],
     "main": "./dist/index",
     "typings": "./dist/",
-    "scripts": {
+    "bin": {
+        "eojuk":"./src/dist/main"
+    },
+    "script,": {
         "build": "tsc",
         "start": "tsc | node ./dist/main",
         "debug": "tsc | node --inspect ./dist/main",
@@ -31,6 +34,7 @@
     },
     "homepage": "https://github.com/myyrakle/eojuk#readme",
     "dependencies": {
+        "commander": "^7.2.0",
         "node-sql-parser": "^3.6.0",
         "pgsql-ast-parser": "^8.1.1"
     },

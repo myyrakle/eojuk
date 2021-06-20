@@ -1,3 +1,4 @@
+import { program } from "commander";
 import PostgreSQLParser from "./input/postgres";
 import SequelizeTypescriptEmitter from "./output/sequelize-typescript";
 
@@ -31,14 +32,19 @@ ALTER TABLE "tb_user" ADD CONSTRAINT "PK_TB_USER" PRIMARY KEY (
 	"user_no"
 );
 `;
-console.log("으악");
+//console.log("으악");
 
 const parser = new PostgreSQLParser();
 const tables = parser.parse(query);
 
-console.log(JSON.stringify(tables));
+//console.log(JSON.stringify(tables));
 
 const emitter = new SequelizeTypescriptEmitter();
 const result = emitter.emit(tables);
 
-console.log(result);
+//console.log(result);
+
+program.version("0.1.0");
+program.option("-i --in", "input file path");
+program.option("-o --out", "output file path");
+program.parse(process.argv);
