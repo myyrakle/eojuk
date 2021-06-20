@@ -12,7 +12,7 @@ import { MySQLParser } from "./input/mysql";
 program.version("0.1.0");
 program.option(
     "-db, --database <dbname>",
-    "사용할 데이터베이스 형식을 결정합니다. 현재는 postgresql만 지원합니다.",
+    "사용할 데이터베이스 형식을 결정합니다. postgresql과 mysql이 지원됩니다.",
     "postgresql"
 );
 program.option(
