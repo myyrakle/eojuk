@@ -106,3 +106,6 @@ dist
 .tern-port
 
 package-lock.json
+
+/test/*.ts
+/test/*.js

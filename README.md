@@ -1,8 +1,9 @@
 # eojuk
 
-![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.1.0-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
+![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.1.1-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
 어죽은 테이블 작성 쿼리를 ORM 코드들로 변환해주는 유용한 도구입니다.
+기존 RAW 쿼리를 마이그레이션하거나 ERD 도구에서 추출해낸 쿼리를 기반으로 엔티티 코드를 작성하기 좋습니다.
 
 ## 설치
 
@@ -121,6 +122,7 @@ export class tb_user extends Model {
 ### 명령줄 옵션
 
 -   -i --in: 입력파일들에 대한 경로입니다.
+-   -dir --outdir: 파일을 출력할 경로입니다.
 -   -db --database: 데이터베이스 형식입니다. 기본값은 postgresql입니다. (아직 의미없음)
 -   -o --orm: 출력할 ORM 형식입니다. 기본값은 sequelize-typescript입니다. (아직 의미없음)
 

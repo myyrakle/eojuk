@@ -6,6 +6,7 @@ import PostgreSQLParser from "./input/postgres";
 import SequelizeTypescriptEmitter from "./output/sequelize-typescript";
 import { IEmmiter } from "./types/emitter";
 import { IParser } from "./types/parser";
+import { join } from "path";
 
 program.version("0.1.0");
 program.option(
@@ -19,10 +20,12 @@ program.option(
     "sequelize-typescript"
 );
 program.option("-i, --in <input...>", "읽어들일 입력파일들의 경로입니다.");
-program.option("-od, --outdir <outdir>", "파일을 출력할 디렉토리 경로입니다.");
+program.option("-dir, --outdir <outdir>", "파일을 출력할 디렉토리 경로입니다.");
 program.parse(process.argv);
 
 const options = program.opts();
+
+const outDir = options.outdir ?? "";
 
 async function main() {
     if (!Array.isArray(options.in) || options?.length === 0) {
@@ -80,9 +83,9 @@ async function main() {
     const sources = emitter.emit(tables);
 
     for (const source of sources) {
-        const filename = existsSync(source.sourceName + ".ts")
-            ? source.sourceName + String(Date.now()) + ".ts"
-            : source.sourceName + ".ts";
+        const filename = existsSync(join(outDir, source.sourceName) + ".ts")
+            ? join(outDir, source.sourceName) + String(Date.now()) + ".ts"
+            : join(outDir, source.sourceName) + ".ts";
 
         writeFileSync(filename, source.source);
         console.log(`## ${filename} 생성 완료`);
