@@ -1,6 +1,6 @@
 # eojuk
 
-![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.1.1-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
+![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.2.0-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
 어죽은 테이블 작성 쿼리를 ORM 코드들로 변환해주는 유용한 도구입니다.
 기존 RAW 쿼리를 마이그레이션하거나 ERD 도구에서 추출해낸 쿼리를 기반으로 엔티티 코드를 작성하기 좋습니다.
@@ -129,7 +129,7 @@ export class tb_user extends Model {
 ### 지원되는 입력형식
 
 -   PostgreSQL
--   MySQL (예정)
+-   MySQL
 
 ### 지원되는 출력형식
 

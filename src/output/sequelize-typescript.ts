@@ -58,7 +58,7 @@ export default class SequelizeTypescriptEmitter implements IEmmiter {
             : "";
 
         const defaultValue = column.default
-            ? `\n\tdefault: litreal("${column.default.replace('"', '\\"')}"),`
+            ? `\n\tdefault: literal("${column.default.replace('"', '\\"')}"),`
             : "";
 
         const dataType = this.dbTypeToDataType(column.dbType);

@@ -1,9 +1,128 @@
 import Table from "../types/table";
+import { Parser } from "node-sql-parser";
+import { IParser } from "../types/parser";
+import Column from "../types/column";
 
-export default class MySQLParser {
+export class MySQLParser implements IParser {
+    private mysqlAstParser = new Parser();
+
     constructor() {}
 
-    async parse(sql: string): Promise<Table[]> {
-        return [];
+    parse(sql: string): Table[] {
+        const ast: any = this.mysqlAstParser.astify(sql);
+
+        const tables: Table[] = [];
+
+        for (const node of ast) {
+            switch (node?.type) {
+                case "create":
+                    switch (node?.keyword) {
+                        case "table":
+                            tables.push(this.parseTable(node));
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return tables;
+    }
+
+    // 테이블 구성 분석
+    private parseTable(node: any): Table {
+        const table: Table = {
+            tableName: node?.table?.[0]?.table,
+            columns: [],
+        };
+
+        for (const nodeOfTable of node.create_definitions) {
+            switch (nodeOfTable.resource) {
+                case "column":
+                    const columnName = nodeOfTable?.column?.column;
+                    const dbType = nodeOfTable?.definition.dataType;
+                    const isAutoIncrement =
+                        nodeOfTable.auto_increment === "auto_increment";
+
+                    const isNotNull = nodeOfTable.nullable?.type === "not null";
+                    const isPrimaryKey = false; // ???
+                    const defaultValue =
+                        nodeOfTable.default_val?.value?.value ?? null;
+                    const comment = nodeOfTable.comment?.value?.value;
+
+                    const column: Column = {
+                        name: columnName,
+                        dbType,
+                        tsType: this.convertDbTypeToTsType(dbType),
+                        isNotNull,
+                        isPrimaryKey,
+                        default: defaultValue,
+                        isAutoIncrement,
+                        comment,
+                    };
+                    table.columns.push(column);
+                    break;
+
+                case "constraint":
+                    switch (nodeOfTable.constraint_type) {
+                        case "primary key":
+                            table.columns.forEach((column) => {
+                                if (
+                                    nodeOfTable?.definition?.includes(
+                                        column.name
+                                    )
+                                ) {
+                                    column.isPrimaryKey = true;
+                                }
+                            });
+                            break;
+                        default:
+                    }
+                    break;
+                default:
+            }
+        }
+
+        return table;
+    }
+
+    // 데이터베이스의 컬럼타입을 타입스크립트 타입으로 변환
+    private convertDbTypeToTsType(typename: string): string {
+        if (
+            [
+                "tinyint",
+                "smallint",
+                "mediumint",
+                "int",
+                "bigint",
+                "decimal",
+                "float",
+                "double",
+            ].includes(typename.toLocaleLowerCase())
+        ) {
+            return "number";
+        } else if (["bool", "boolean"].includes(typename.toLocaleLowerCase())) {
+            return "boolean";
+        } else if (
+            [
+                "char",
+                "varchar",
+                "tinytext",
+                "text",
+                "mediumtext",
+                "longtext",
+            ].includes(typename.toLocaleLowerCase())
+        ) {
+            return "string";
+        } else if (
+            ["date", "time", "datetime", "timestamp", "year"].includes(
+                typename.toLocaleLowerCase()
+            )
+        ) {
+            return "Date";
+        } else {
+            return "string";
+        }
     }
 }

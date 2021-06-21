@@ -2,11 +2,12 @@
 
 import { program } from "commander";
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import PostgreSQLParser from "./input/postgres";
+import { PostgreSQLParser } from "./input/postgres";
 import SequelizeTypescriptEmitter from "./output/sequelize-typescript";
 import { IEmmiter } from "./types/emitter";
 import { IParser } from "./types/parser";
 import { join } from "path";
+import { MySQLParser } from "./input/mysql";
 
 program.version("0.1.0");
 program.option(
@@ -52,31 +53,34 @@ async function main() {
         case "postgre":
         case "pg":
             parser = new PostgreSQLParser();
-
-            switch (options.orm) {
-                case "sequelize-typescript":
-                case "st":
-                    emitter = new SequelizeTypescriptEmitter();
-                    break;
-                case "sequelize":
-                case "sq":
-                    console.error("!! 아직 지원되지 않는 ORM입니다.");
-                    break;
-                case "typeorm":
-                case "ty":
-                    console.error("!! 아직 지원되지 않는 ORM입니다.");
-                    break;
-            }
             break;
 
         case "mysql":
         case "my":
-            console.error("!! 아직 지원되지 않는 데이터베이스입니다.");
+            parser = new MySQLParser();
             break;
 
         default:
             console.error("!! 아직 지원되지 않는 데이터베이스입니다.");
+            return;
+    }
+
+    switch (options.orm) {
+        case "sequelize-typescript":
+        case "st":
+            emitter = new SequelizeTypescriptEmitter();
             break;
+        case "sequelize":
+        case "sq":
+            console.error("!! 아직 지원되지 않는 ORM입니다.");
+            break;
+        case "typeorm":
+        case "ty":
+            console.error("!! 아직 지원되지 않는 ORM입니다.");
+            break;
+        default:
+            console.error("!! 아직 지원되지 않는 ORM입니다.");
+            return;
     }
 
     const tables = parser.parse(query);

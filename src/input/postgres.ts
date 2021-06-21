@@ -10,7 +10,7 @@ import {
 } from "pgsql-ast-parser";
 import Column from "../types/column";
 
-export default class PostgreSQLParser implements IParser {
+export class PostgreSQLParser implements IParser {
     constructor() {}
 
     // Auto Increment에 해당하는 타입인지 체크
@@ -92,7 +92,7 @@ export default class PostgreSQLParser implements IParser {
     }
 
     // 테이블 구성 분석
-    parseTable(node: CreateTableStatement): Table {
+    private parseTable(node: CreateTableStatement): Table {
         const table: Table = {
             tableName: node?.name?.name,
             columns: [],
@@ -141,7 +141,7 @@ export default class PostgreSQLParser implements IParser {
     }
 
     // 코멘트 분석
-    parseComment(node: CommentStatement, tables: Table[]) {
+    private parseComment(node: CommentStatement, tables: Table[]) {
         const commentContents = node?.comment;
         const commentTargetTableName = (node?.on as any)?.column?.table;
         const commentTargetColumnName = (node?.on as any)?.column?.column;
@@ -155,7 +155,7 @@ export default class PostgreSQLParser implements IParser {
     }
 
     // 기본키 분석
-    parsePrimaryKey(node: AlterTableStatement, tables: Table[]) {
+    private parsePrimaryKey(node: AlterTableStatement, tables: Table[]) {
         const pkTargetColumnNames = (
             node?.change as any
         )?.constraint?.columns?.map((e: any) => e?.name);
