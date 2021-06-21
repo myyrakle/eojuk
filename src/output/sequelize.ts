@@ -1,4 +1,4 @@
-import IEmmiter from "../types/emitter";
+import { IEmmiter } from "../types/emitter";
 import Source from "../types/source";
 import Table from "../types/table";
 

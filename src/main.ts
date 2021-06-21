@@ -4,6 +4,8 @@ import { program } from "commander";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import PostgreSQLParser from "./input/postgres";
 import SequelizeTypescriptEmitter from "./output/sequelize-typescript";
+import { IEmmiter } from "./types/emitter";
+import { IParser } from "./types/parser";
 
 program.version("0.1.0");
 program.option(
@@ -17,6 +19,7 @@ program.option(
     "sequelize-typescript"
 );
 program.option("-i, --in <input...>", "읽어들일 입력파일들의 경로입니다.");
+program.option("-od, --outdir <outdir>", "파일을 출력할 디렉토리 경로입니다.");
 program.parse(process.argv);
 
 const options = program.opts();
@@ -37,36 +40,27 @@ async function main() {
         console.error(error);
     }
 
+    let parser: IParser = null;
+    let emitter: IEmmiter = null;
+
     switch (options.database) {
         case "postgresql":
+        case "postgres":
+        case "postgre":
         case "pg":
-            const parser = new PostgreSQLParser();
-            const tables = parser.parse(query);
+            parser = new PostgreSQLParser();
 
             switch (options.orm) {
                 case "sequelize-typescript":
                 case "st":
-                    const emitter = new SequelizeTypescriptEmitter();
-                    const sources = emitter.emit(tables);
-
-                    for (const source of sources) {
-                        const filename = existsSync(source.sourceName + ".ts")
-                            ? source.sourceName + String(Date.now()) + ".ts"
-                            : source.sourceName + ".ts";
-
-                        writeFileSync(filename, source.source);
-                        console.log(`## ${filename} 생성 완료`);
-                    }
-
-                    console.log("변환 성공");
-
+                    emitter = new SequelizeTypescriptEmitter();
                     break;
                 case "sequelize":
                 case "sq":
                     console.error("!! 아직 지원되지 않는 ORM입니다.");
                     break;
                 case "typeorm":
-                case "to":
+                case "ty":
                     console.error("!! 아직 지원되지 않는 ORM입니다.");
                     break;
             }
@@ -81,6 +75,20 @@ async function main() {
             console.error("!! 아직 지원되지 않는 데이터베이스입니다.");
             break;
     }
+
+    const tables = parser.parse(query);
+    const sources = emitter.emit(tables);
+
+    for (const source of sources) {
+        const filename = existsSync(source.sourceName + ".ts")
+            ? source.sourceName + String(Date.now()) + ".ts"
+            : source.sourceName + ".ts";
+
+        writeFileSync(filename, source.source);
+        console.log(`## ${filename} 생성 완료`);
+    }
+
+    console.log("변환 성공");
 }
 
 main();

@@ -1,7 +1,7 @@
-import IEmitOption from "./emit-option";
+import { IOption } from "./option";
 import Source from "./source";
 import Table from "./table";
 
-export default interface IEmmiter {
-    emit(tables: Table[], option?: IEmitOption): Source[] | Promise<Source[]>;
+export interface IEmmiter {
+    emit(tables: Table[], option?: IOption): Source[];
 }
