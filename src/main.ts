@@ -10,7 +10,7 @@ import { join } from "path";
 import { MySQLParser } from "./input/mysql";
 import { TypeOrmEmitter } from "./output/typeorm";
 
-program.version("0.3.0");
+program.version("0.3.1");
 program.option(
     "-db, --database <dbname>",
     "사용할 데이터베이스 형식을 결정합니다. pg(postgresql)와 my(mysql)가 지원됩니다.",

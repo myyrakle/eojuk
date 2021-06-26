@@ -1,7 +1,8 @@
 {
     "compileOnSave": true,
     "exclude": [
-      "./dist"
+      "./dist", 
+      "./test"
     ],
     "include": [
       "./src"
