@@ -8,6 +8,7 @@ import { IEmmiter } from "./types/emitter";
 import { IParser } from "./types/parser";
 import { join } from "path";
 import { MySQLParser } from "./input/mysql";
+import { TypeOrmEmitter } from "./output/typeorm";
 
 program.version("0.1.0");
 program.option(
@@ -76,7 +77,7 @@ async function main() {
             break;
         case "typeorm":
         case "ty":
-            console.error("!! 아직 지원되지 않는 ORM입니다.");
+            emitter = new TypeOrmEmitter();
             break;
         default:
             console.error("!! 아직 지원되지 않는 ORM입니다.");

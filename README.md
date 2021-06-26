@@ -136,3 +136,21 @@ export class tb_user extends Model {
 -   sequelize (예정)
 -   sequelize-typescript
 -   typeorm (예정)
+
+### 사용례
+
+#####
+
+mysql 쿼리를 typeorm 형식으로 내보내기
+
+```
+eojuk -i .\test\mysql\test1.sql -dir .\test\ -db mysql  -o typeorm
+```
+
+#####
+
+postgresql 쿼리를 sequelize-typescript 형식으로 내보내기
+
+```
+eojuk -i .\test\pg\test1.sql -dir .\test\ -db pg  -o sequezlie-typescript
+```
