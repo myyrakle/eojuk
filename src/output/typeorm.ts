@@ -11,27 +11,34 @@ import {Entity, PrimaryGeneratedColumn, Column, Generated} from "typeorm";
 export class TypeOrmEmitter implements IEmmiter {
     // 컬럼 필드 코드 생성
     private generateColumn(column: Column) {
-        const defaultValue = column.default
+        let defaultValue = column.default
             ? `\n\t\tdefault: "${column.default.replace('"', '\\"')}",`
             : "";
 
-        const comment = column.default
+        let comment = column.default
             ? `\n\t\tcomment: "${column.comment.replace('"', '\\"')}",`
+            : "";
+
+        let nullable = column.default
+            ? `\n\t\tnullable: ${!column.isNotNull},`
             : "";
 
         let columnDecorator = "Column";
 
         if (column.isPrimaryKey && column.isAutoIncrement) {
             columnDecorator = "PrimaryGeneratedColumn";
+            defaultValue = "";
+            nullable = "";
         } else if (column.isPrimaryKey) {
             columnDecorator = "PrimaryColumn";
+            nullable = "";
         } else if (column.isAutoIncrement) {
             columnDecorator = "Generated";
+            defaultValue = "";
         }
 
         return `    @${columnDecorator}({
-        type: '${column.dbType}', 
-        nullable: ${!column.isNotNull},${defaultValue}${comment}
+        type: '${column.dbType.toLowerCase()}',${nullable}${defaultValue}${comment}
     })
     ${column.name}: ${column.tsType};`;
     }
@@ -53,7 +60,7 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
         if (option?.sourceSplit) {
             return tables.map((table) => ({
                 sourceName: table.tableName,
-                source: importTemplate + this.generateTableCode(table),
+                source: importTemplate + "\n" + this.generateTableCode(table),
             }));
         } else {
             return [
@@ -61,6 +68,7 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
                     sourceName: "all",
                     source:
                         importTemplate +
+                        "\n" +
                         tables
                             .map((table) => this.generateTableCode(table))
                             .join("\n\n"),

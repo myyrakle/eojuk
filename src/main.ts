@@ -10,15 +10,15 @@ import { join } from "path";
 import { MySQLParser } from "./input/mysql";
 import { TypeOrmEmitter } from "./output/typeorm";
 
-program.version("0.1.0");
+program.version("0.3.0");
 program.option(
     "-db, --database <dbname>",
-    "사용할 데이터베이스 형식을 결정합니다. postgresql과 mysql이 지원됩니다.",
+    "사용할 데이터베이스 형식을 결정합니다. pg(postgresql)와 my(mysql)가 지원됩니다.",
     "postgresql"
 );
 program.option(
     "-o, --orm <dbname>",
-    "방출할 ORM 형식을 결정합니다.",
+    "방출할 ORM 형식을 결정합니다. st(sequelize-typescript). ty(typeorm) 2가지가 지원됩니다.",
     "sequelize-typescript"
 );
 program.option("-i, --in <input...>", "읽어들일 입력파일들의 경로입니다.");
@@ -62,7 +62,7 @@ async function main() {
             break;
 
         default:
-            console.error("!! 아직 지원되지 않는 데이터베이스입니다.");
+            console.error("!! 지원되지 않는 데이터베이스입니다.");
             return;
     }
 
@@ -80,7 +80,7 @@ async function main() {
             emitter = new TypeOrmEmitter();
             break;
         default:
-            console.error("!! 아직 지원되지 않는 ORM입니다.");
+            console.error("!! 지원되지 않는 ORM입니다.");
             return;
     }
 
@@ -96,7 +96,7 @@ async function main() {
         console.log(`## ${filename} 생성 완료`);
     }
 
-    console.log("변환 성공");
+    console.log("$$ 변환 성공");
 }
 
 main();

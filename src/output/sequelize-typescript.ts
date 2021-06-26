@@ -92,7 +92,7 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
         if (option?.sourceSplit) {
             return tables.map((table) => ({
                 sourceName: table.tableName,
-                source: importTemplate + this.generateTableCode(table),
+                source: importTemplate + "\n" + this.generateTableCode(table),
             }));
         } else {
             return [
@@ -100,6 +100,7 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
                     sourceName: "all",
                     source:
                         importTemplate +
+                        "\n" +
                         tables
                             .map((table) => this.generateTableCode(table))
                             .join("\n\n"),
