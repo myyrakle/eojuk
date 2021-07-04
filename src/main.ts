@@ -1,9 +1,16 @@
 #! /usr/bin/env node
 
+export { IEmmiter } from "./types/emitter";
+export { TypeOrmEmitter } from "./output/typeorm";
+export { SequelizeTypescriptEmitter } from "./output/sequelize-typescript";
+export { IParser } from "./types/parser";
+export { MySQLParser } from "./input/mysql";
+export { PostgreSQLParser } from "./input/postgres";
+
 import { program } from "commander";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { PostgreSQLParser } from "./input/postgres";
-import SequelizeTypescriptEmitter from "./output/sequelize-typescript";
+import { SequelizeTypescriptEmitter } from "./output/sequelize-typescript";
 import { IEmmiter } from "./types/emitter";
 import { IParser } from "./types/parser";
 import { join } from "path";

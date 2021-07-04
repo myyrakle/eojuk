@@ -30,7 +30,7 @@ import {
 } from 'sequelize-typescript';
 `;
 
-export default class SequelizeTypescriptEmitter implements IEmmiter {
+export class SequelizeTypescriptEmitter implements IEmmiter {
     private dbTypeToDataType(dbtype: string): string {
         if (["varchar", "text", "char"].includes(dbtype.toLowerCase())) {
             return "DataType.STRING";
