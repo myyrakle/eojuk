@@ -35,7 +35,7 @@
     "homepage": "https://github.com/myyrakle/eojuk#readme",
     "dependencies": {
         "commander": "^7.2.0",
-        "node-sql-parser": "^3.6.0",
+        "node-sql-parser": "^3.6.1",
         "pgsql-ast-parser": "^8.1.1"
     },
     "devDependencies": {
