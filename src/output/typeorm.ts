@@ -3,20 +3,35 @@ import { IEmmiter } from "../types/emitter";
 import { IOption } from "../types/option";
 import Source from "../types/source";
 import Table from "../types/table";
+import {
+    convertNameCaseByOption,
+    toCamelCase,
+    toPascalCase,
+    toSnakeCase,
+} from "../util.ts/name";
 
 const importTemplate = `
 import {Entity, PrimaryGeneratedColumn, Column, Generated} from "typeorm";
 `;
 
 export class TypeOrmEmitter implements IEmmiter {
+    private option: IOption;
+
     // 컬럼 필드 코드 생성
     private generateColumn(column: Column) {
+        const columnFieldName = convertNameCaseByOption(
+            this.option.outputFieldNameCase,
+            column.name
+        );
+
         let defaultValue = column.default
-            ? `\n\t\tdefault: "${column.default.replace('"', '\\"')}",`
+            ? `\n\t\tdefault: "${column.default?.replace('"', '\\"')}",`
             : "";
 
+        console.log(column.default);
+
         let comment = column.default
-            ? `\n\t\tcomment: "${column.comment.replace('"', '\\"')}",`
+            ? `\n\t\tcomment: "${column.comment?.replace('"', '\\"')}",`
             : "";
 
         let nullable = column.default
@@ -38,25 +53,40 @@ export class TypeOrmEmitter implements IEmmiter {
         }
 
         return `    @${columnDecorator}({
+        name: '${column.name}'
         type: '${column.dbType.toLowerCase()}',${nullable}${defaultValue}${comment}
     })
-    ${column.name}: ${column.tsType};`;
+    ${columnFieldName}: ${column.tsType};`;
     }
 
     // 테이블 클래스 코드 생성
     private generateTableCode(table: Table) {
+        const tableClassName = convertNameCaseByOption(
+            this.option.outputClassNameCase,
+            table.tableName
+        );
+
         return `@Entity({
     name: '${table.tableName}',
     // database: '',
     // schema : true,
     synchronize : false,
 })
-export class ${table.tableName} {
+export class ${tableClassName} {
 ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
 }`;
     }
 
-    emit(tables: Table[], option: IOption = { sourceSplit: true }): Source[] {
+    emit(
+        tables: Table[],
+        option: IOption = {
+            sourceSplit: true,
+            outputClassNameCase: "PASCAL",
+            outputFieldNameCase: "CAMEL",
+        }
+    ): Source[] {
+        this.option = option;
+
         if (option?.sourceSplit) {
             return tables.map((table) => ({
                 sourceName: table.tableName,

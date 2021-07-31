@@ -1,6 +1,6 @@
 {
     "name": "eojuk",
-    "version": "0.4.3",
+    "version": "0.4.4",
     "description": "",
     "keywords": [
         "mysql",
@@ -15,6 +15,7 @@
     },
     "scripts": {
         "build": "tsc",
+        "build:test": "tsc && npm link --force",
         "start": "tsc | node ./dist/main",
         "debug": "tsc | node --inspect ./dist/main",
         "dev": "tsc --watch -p ./src | node --inspect ./dist/main",
@@ -34,12 +35,16 @@
     },
     "homepage": "https://github.com/myyrakle/eojuk#readme",
     "dependencies": {
+        "@angular-devkit/core": "^12.1.4",
         "commander": "^7.2.0",
         "node-sql-parser": "^3.6.1",
-        "pgsql-ast-parser": "^8.1.1"
+        "pgsql-ast-parser": "^8.1.1",
+        "pluralize": "^8.0.0",
+        "snake-case": "^3.0.4"
     },
     "devDependencies": {
         "@types/node": "^12.20.14",
+        "@types/pluralize": "0.0.29",
         "@types/prettier": "^1.19.1",
         "tslint": "^5.20.1",
         "typescript": "^4.3.2"

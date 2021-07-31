@@ -9,3 +9,5 @@ CREATE TABLE `tb_user` (
 	`complete_yn`	tinyint	NOT NULL	DEFAULT false	COMMENT '다 풀었는지',
 	PRIMARY KEY(`user_no`)
 );
+
+

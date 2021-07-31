@@ -1,4 +1,4 @@
-CREATE TABLE `action` (
+CREATE TABLE action (
   `id` int NOT NULL AUTO_INCREMENT,
   `platform` enum('IOS','ANDROID','PC_WEB','MOBILE_WEB','ETC') NOT NULL DEFAULT 'PC_WEB',
   `date` datetime NOT NULL,

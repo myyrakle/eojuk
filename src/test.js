@@ -19,7 +19,7 @@ const ast = pgParser.parse(psqlQuery);
 
 //console.log(ast[0].columns[0]);
 
-const mysqlQuery = `CREATE TABLE test (
+const mysqlQuery = `CREATE TABLE \`test\` (
     id int(11)  NOT NULL AUTO_INCREMENT,
     name varchar(100) NOT NULL,
     description longtext ,

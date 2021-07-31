@@ -32,6 +32,16 @@ program.option(
 );
 program.option("-i, --in <input...>", "읽어들일 입력파일들의 경로입니다.");
 program.option("-dir, --outdir <outdir>", "파일을 출력할 디렉토리 경로입니다.");
+program.option(
+    "-c, --class-name <case>",
+    "클래스명을 어떤 케이스로 할지 정합니다.",
+    "PASCAL"
+);
+program.option(
+    "-f, --field-name <case>",
+    "클래스의 필드명을 어떤 케이스로 할지 정합니다.",
+    "CAMEL"
+);
 program.parse(process.argv);
 
 const options = program.opts();
@@ -57,6 +67,7 @@ async function main() {
     let parser: IParser = null;
     let emitter: IEmmiter = null;
 
+    console.log(options);
     switch (options.database) {
         case "postgresql":
         case "postgres":

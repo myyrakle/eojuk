@@ -9,7 +9,9 @@ export class MySQLParser implements IParser {
     constructor() {}
 
     parse(sql: string): Table[] {
-        const ast: any = this.mysqlAstParser.astify(sql);
+        const ast: any = this.mysqlAstParser.astify(sql, {
+            database: "mysql",
+        });
 
         const tables: Table[] = [];
 
