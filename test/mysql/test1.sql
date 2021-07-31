@@ -8,6 +8,6 @@ CREATE TABLE `tb_user` (
 	`reg_date`	date	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '등록일시',
 	`complete_yn`	tinyint	NOT NULL	DEFAULT false	COMMENT '다 풀었는지',
 	PRIMARY KEY(`user_no`)
-);
+);;
 
 

@@ -23,11 +23,11 @@ export function toSnakeCase(name: string): string {
 
 export function convertNameCaseByOption(option: string, name: string): string {
     switch (option) {
-        case "CAMEL_CASE":
+        case "CAMEL":
             return toCamelCase(name);
-        case "SNAKE_CASE":
+        case "SNAKE":
             return toSnakeCase(name);
-        case "PASCAL_CASE":
+        case "PASCAL":
             return toPascalCase(name);
         case "NONE":
             return name;

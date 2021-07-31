@@ -28,10 +28,8 @@ export class TypeOrmEmitter implements IEmmiter {
             ? `\n\t\tdefault: "${column.default?.replace('"', '\\"')}",`
             : "";
 
-        console.log(column.default);
-
         let comment = column.default
-            ? `\n\t\tcomment: "${column.comment?.replace('"', '\\"')}",`
+            ? `\n\t\tcomment: "${column.comment?.replace('"', '\\"') ?? ""}",`
             : "";
 
         let nullable = column.default

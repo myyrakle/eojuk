@@ -63,21 +63,23 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
             column.name
         );
 
-        const primaryKey = column.isPrimaryKey ? "primaryKey: true, \n\t" : "";
+        const primaryKey = column.isPrimaryKey
+            ? "primaryKey: true, \n\t\t"
+            : "";
 
         const autoIncrement = column.isAutoIncrement
-            ? "autoIncrement: true, \n\t"
+            ? "autoIncrement: true, \n\t\t"
             : "";
 
         const defaultValue = column.default
-            ? `\n\tdefault: literal("${column.default.replace('"', '\\"')}"),`
+            ? `\n\t\tdefault: literal("${column.default.replace('"', '\\"')}"),`
             : "";
 
         const dataType = this.dbTypeToDataType(column.dbType);
 
-        return `    @Comment(\`${column.comment}\`)
+        return `    @Comment(\`${column.comment ?? ""}\`)
     @Column({
-        ${primaryKey}${autoIncrement}field: ${columnFieldName},
+        ${primaryKey}${autoIncrement}field: '${columnFieldName}',
         type: ${dataType}, 
         allowNull: ${!column.isNotNull},${defaultValue}
     })

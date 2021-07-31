@@ -9,6 +9,8 @@ import { IParser } from "./types/parser";
 import { join } from "path";
 import { MySQLParser } from "./input/mysql";
 import { TypeOrmEmitter } from "./output/typeorm";
+import { IOption } from "./types/option";
+import { NAME_CASE_LIST } from "./types/name-case";
 
 export {
     IEmmiter,
@@ -33,13 +35,13 @@ program.option(
 program.option("-i, --in <input...>", "읽어들일 입력파일들의 경로입니다.");
 program.option("-dir, --outdir <outdir>", "파일을 출력할 디렉토리 경로입니다.");
 program.option(
-    "-c, --class-name <case>",
-    "클래스명을 어떤 케이스로 할지 정합니다.",
+    "-cn, --classname <case>",
+    "클래스명을 어떤 케이스로 할지 정합니다. ex) PASCAL, NONE. 기본값 PASCAL",
     "PASCAL"
 );
 program.option(
-    "-f, --field-name <case>",
-    "클래스의 필드명을 어떤 케이스로 할지 정합니다.",
+    "-fn, --fieldname <case>",
+    "클래스의 필드명을 어떤 케이스로 할지 정합니다. ex) CAMEL, SNAKE, NONE, 기본값 CAMEL",
     "CAMEL"
 );
 program.parse(process.argv);
@@ -67,7 +69,24 @@ async function main() {
     let parser: IParser = null;
     let emitter: IEmmiter = null;
 
-    console.log(options);
+    const emitOption: IOption = {
+        sourceSplit: true,
+        outputClassNameCase: "PASCAL",
+        outputFieldNameCase: "CAMEL",
+    };
+
+    if (
+        NAME_CASE_LIST.includes((options?.classname as string)?.toUpperCase())
+    ) {
+        emitOption.outputClassNameCase = options.classname;
+    }
+
+    if (
+        NAME_CASE_LIST.includes((options?.fieldname as string)?.toUpperCase())
+    ) {
+        emitOption.outputFieldNameCase = options.fieldname;
+    }
+
     switch (options.database) {
         case "postgresql":
         case "postgres":
@@ -79,6 +98,24 @@ async function main() {
         case "mysql":
         case "my":
             parser = new MySQLParser();
+            break;
+
+        case "mssql":
+        case "ms":
+            console.error("!! 지원되지 않는 데이터베이스입니다.");
+            break;
+
+        case "oracle":
+            console.error("!! 지원되지 않는 데이터베이스입니다.");
+            break;
+
+        case "sqlite":
+            console.error("!! 지원되지 않는 데이터베이스입니다.");
+            break;
+
+        case "mariadb":
+        case "maria":
+            console.error("!! 지원되지 않는 데이터베이스입니다.");
             break;
 
         default:
@@ -105,7 +142,7 @@ async function main() {
     }
 
     const tables = parser.parse(query);
-    const sources = emitter.emit(tables);
+    const sources = emitter.emit(tables, emitOption);
 
     for (const source of sources) {
         const filename = existsSync(join(outDir, source.sourceName) + ".ts")
