@@ -1,4 +1,5 @@
 import { classify, dasherize } from "@angular-devkit/core/src/utils/strings";
+import camelcase from "camelcase";
 import { snakeCase } from "snake-case";
 
 const lowercased = (name: any) => {
@@ -8,12 +9,12 @@ const lowercased = (name: any) => {
 
 // 식별자를 파스칼케이스로 변환
 export function toPascalCase(name: string): string {
-    return classify(name);
+    return camelcase(classify(name), { pascalCase: true });
 }
 
 // 식별자를 카멜케이스로 변환
 export function toCamelCase(name: string): string {
-    return lowercased(name);
+    return camelcase(lowercased(name));
 }
 
 // 식별자를 스네이크케이스로 변환
