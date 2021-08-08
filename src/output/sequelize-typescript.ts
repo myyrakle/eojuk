@@ -8,6 +8,7 @@ import {
     toCamelCase,
     toSnakeCase,
 } from "../util.ts/name";
+import { TAB } from "../util.ts/tab";
 
 const importTemplate = `
 import { literal } from 'sequelize';
@@ -64,15 +65,18 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
         );
 
         const primaryKey = column.isPrimaryKey
-            ? "primaryKey: true, \n\t\t"
+            ? `primaryKey: true, \n${TAB}${TAB}`
             : "";
 
         const autoIncrement = column.isAutoIncrement
-            ? "autoIncrement: true, \n\t\t"
+            ? `autoIncrement: true, \n${TAB}${TAB}`
             : "";
 
         const defaultValue = column.default
-            ? `\n\t\tdefault: literal("${column.default.replace('"', '\\"')}"),`
+            ? `\n${TAB}${TAB}default: literal("${column.default.replace(
+                  '"',
+                  '\\"'
+              )}"),`
             : "";
 
         const dataType = this.dbTypeToDataType(column.dbType);

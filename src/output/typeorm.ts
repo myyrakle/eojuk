@@ -9,6 +9,7 @@ import {
     toPascalCase,
     toSnakeCase,
 } from "../util.ts/name";
+import { TAB } from "../util.ts/tab";
 
 const importTemplate = `
 import {Entity, PrimaryGeneratedColumn, Column, Generated} from "typeorm";
@@ -25,15 +26,17 @@ export class TypeOrmEmitter implements IEmmiter {
         );
 
         let defaultValue = column.default
-            ? `\n\t\tdefault: "${column.default?.replace('"', '\\"')}",`
+            ? `\n${TAB}${TAB}default: "${column.default?.replace('"', '\\"')}",`
             : "";
 
         let comment = column.default
-            ? `\n\t\tcomment: "${column.comment?.replace('"', '\\"') ?? ""}",`
+            ? `\n${TAB}${TAB}comment: "${
+                  column.comment?.replace('"', '\\"') ?? ""
+              }",`
             : "";
 
         let nullable = column.default
-            ? `\n\t\tnullable: ${!column.isNotNull},`
+            ? `\n${TAB}${TAB}nullable: ${!column.isNotNull},`
             : "";
 
         let columnDecorator = "Column";
