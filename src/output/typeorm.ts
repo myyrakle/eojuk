@@ -54,7 +54,7 @@ export class TypeOrmEmitter implements IEmmiter {
         }
 
         return `    @${columnDecorator}({
-        name: '${column.name}'
+        name: '${column.name}',
         type: '${column.dbType.toLowerCase()}',${nullable}${defaultValue}${comment}
     })
     ${columnFieldName}: ${column.tsType};`;
