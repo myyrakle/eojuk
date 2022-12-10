@@ -1,4 +1,4 @@
-import { IParser } from "../types/parser";
+import { IParser } from "../interfaces/parser";
 import Table from "../types/table";
 import {
     parseWithComments,

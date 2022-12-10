@@ -1,7 +1,7 @@
 import { PostgreSQLParser } from "./input/postgres";
 import { SequelizeTypescriptEmitter } from "./output/sequelize-typescript";
-import { IEmmiter } from "./types/emitter";
-import { IParser } from "./types/parser";
+import { IEmmiter } from "./interfaces/emitter";
+import { IParser } from "./interfaces/parser";
 import { MySQLParser } from "./input/mysql";
 import { TypeOrmEmitter } from "./output/typeorm";
 

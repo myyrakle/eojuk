@@ -1,5 +1,5 @@
 import Column from "../types/column";
-import { IEmmiter } from "../types/emitter";
+import { IEmmiter } from "../interfaces/emitter";
 import { IOption } from "../types/option";
 import Source from "../types/source";
 import Table from "../types/table";

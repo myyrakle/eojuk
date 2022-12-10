@@ -1,6 +1,6 @@
 import Column from "../types/column";
 import { IOption } from "../types/option";
-import { IEmmiter } from "../types/emitter";
+import { IEmmiter } from "../interfaces/emitter";
 import Source from "../types/source";
 import Table from "../types/table";
 import {

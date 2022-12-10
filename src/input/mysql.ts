@@ -1,6 +1,6 @@
 import Table from "../types/table";
 import { Parser } from "node-sql-parser";
-import { IParser } from "../types/parser";
+import { IParser } from "../interfaces/parser";
 import Column from "../types/column";
 
 export class MySQLParser implements IParser {
