@@ -15,4 +15,6 @@ export interface IOption {
     autoAddCreatedAt?: string; // 기본으로 CreatedAt 속성을 주입할지 여부. 그리고 그 컬럼명
     autoAddUpdatedAt?: string; // 기본으로 UpdatedAt 속성을 주입할지 여부. 그리고 그 컬럼명
     autoAddDeletedAt?: string; // 기본으로 DeletedAt 속성을 주입할지 여부. 그리고 그 컬럼명
+
+    databaseName?: string; // 데이터베이스명
 }

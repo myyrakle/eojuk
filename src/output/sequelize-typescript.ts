@@ -109,6 +109,8 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
         const hasUpdatedAt = table.columns.find(e=>e.name == this.option.autoAddUpdatedAt) != null;
         const hasDeletedAt = table.columns.find(e=>e.name == this.option.autoAddDeletedAt) != null;
 
+        const hasDatabaseName = this.option.databaseName != null
+
         const tableClassName = convertNameCaseByOption(
             this.option.outputClassNameCase,
             table.tableName
@@ -122,7 +124,7 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
     createdAt: ${hasCreatedAt},
     updatedAt: ${hasUpdatedAt},
     deletedAt: ${hasDeletedAt},
-    // schema: 'cp',
+    ${hasDatabaseName ? '' : '// '}schema: '${this.option.databaseName ?? 'public'}',
 })
 export class ${tableClassName} extends Model {
 ${table.columns.map((column) => this.generateColumn(column)).join("\n\n")}
