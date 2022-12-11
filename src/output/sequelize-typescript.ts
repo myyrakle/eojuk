@@ -64,6 +64,11 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
             column.name
         );
 
+        // PrimaryKey 강제 추가 옵션
+        if(column.name == this.option.autoAddPrimaryKey) {
+            column.isPrimaryKey = true;
+        }
+
         const primaryKey = column.isPrimaryKey
             ? `primaryKey: true, \n${TAB}${TAB}`
             : "";
@@ -83,7 +88,7 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
 
         return `    @Comment(\`${column.comment ?? ""}\`)
     @Column({
-        ${primaryKey}${autoIncrement}field: '${columnFieldName}',
+        ${primaryKey}${autoIncrement}field: '${column.name}',
         type: ${dataType}, 
         allowNull: ${!column.isNotNull},${defaultValue}
     })
