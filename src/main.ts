@@ -64,6 +64,10 @@ program.option(
     "무슨 컬럼을 DeletedAt 컬럼으로 설정할 것인지 정합니다. ex) deleted_at",
     "deleted_at"
 );
+program.option(
+    "-s, --schema <schema_name>",
+    "스키마 명을 정합니다. ex) public"
+);
 program.parse(process.argv);
 
 const options = program.opts();
@@ -97,6 +101,7 @@ async function main() {
         autoAddCreatedAt: options.createdat,
         autoAddUpdatedAt: options.updatedat,
         autoAddDeletedAt: options.deletedat,
+        databaseName: options.schema,
     };
 
     if (
