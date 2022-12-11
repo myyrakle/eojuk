@@ -44,6 +44,26 @@ program.option(
     "클래스의 필드명을 어떤 케이스로 할지 정합니다. ex) CAMEL, SNAKE, NONE, 기본값 CAMEL",
     "CAMEL"
 );
+program.option(
+    "-pk, --primarykey <column_name>",
+    "기본키를 무엇으로 설정할 것인지 정합니다. ex) id",
+    "id"
+);
+program.option(
+    "-ca, --createdat <column_name>",
+    "무슨 컬럼을 CreatedAt 컬럼으로 설정할 것인지 정합니다. ex) created_at",
+    "created_at"
+);
+program.option(
+    "-ua, --updatedat <column_name>",
+    "무슨 컬럼을 UpdatedAt 컬럼으로 설정할 것인지 정합니다. ex) updated_at",
+    "updated_at"
+);
+program.option(
+    "-da, --deletedat <column_name>",
+    "무슨 컬럼을 DeletedAt 컬럼으로 설정할 것인지 정합니다. ex) deleted_at",
+    "deleted_at"
+);
 program.parse(process.argv);
 
 const options = program.opts();
@@ -73,6 +93,10 @@ async function main() {
         sourceSplit: true,
         outputClassNameCase: "PASCAL",
         outputFieldNameCase: "CAMEL",
+        autoAddPrimaryKey: options.primarykey,
+        autoAddCreatedAt: options.createdat,
+        autoAddUpdatedAt: options.updatedat,
+        autoAddDeletedAt: options.deletedat,
     };
 
     if (

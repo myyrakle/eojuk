@@ -64,10 +64,18 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
             column.name
         );
 
+        const hasCreatedAt = column.name == this.option.autoAddCreatedAt
+        const hasUpdatedAt = column.name == this.option.autoAddUpdatedAt
+        const hasDeletedAt = column.name == this.option.autoAddDeletedAt
+
         // PrimaryKey 강제 추가 옵션
         if(column.name == this.option.autoAddPrimaryKey) {
             column.isPrimaryKey = true;
         }
+
+        const createdAt = hasCreatedAt ? `\n${TAB}@CreatedAt` : "";
+        const updatedAt = hasUpdatedAt ? `\n${TAB}@UpdatedAt` : "";
+        const deletedAt = hasDeletedAt ? `\n${TAB}@DeletedAt` : "";
 
         const primaryKey = column.isPrimaryKey
             ? `primaryKey: true, \n${TAB}${TAB}`
@@ -86,7 +94,7 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
 
         const dataType = this.dbTypeToDataType(column.dbType);
 
-        return `    @Comment(\`${column.comment ?? ""}\`)
+        return `    @Comment(\`${column.comment ?? ""}\`)${createdAt}${updatedAt}${deletedAt}
     @Column({
         ${primaryKey}${autoIncrement}field: '${column.name}',
         type: ${dataType}, 
@@ -97,6 +105,10 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
 
     // 테이블 클래스 코드 생성
     private generateTableCode(table: Table) {
+        const hasCreatedAt = table.columns.find(e=>e.name == this.option.autoAddCreatedAt) != null;
+        const hasUpdatedAt = table.columns.find(e=>e.name == this.option.autoAddUpdatedAt) != null;
+        const hasDeletedAt = table.columns.find(e=>e.name == this.option.autoAddDeletedAt) != null;
+
         const tableClassName = convertNameCaseByOption(
             this.option.outputClassNameCase,
             table.tableName
@@ -104,12 +116,12 @@ export class SequelizeTypescriptEmitter implements IEmmiter {
 
         return `@Table({
     tableName: '${table.tableName}',
-    paranoid: false,
+    paranoid: ${hasDeletedAt},
     freezeTableName: true,
-    timestamps: false,
-    createdAt: false,
-    updatedAt: false,
-    deletedAt: false,
+    timestamps: ${hasCreatedAt || hasCreatedAt || hasDeletedAt},
+    createdAt: ${hasCreatedAt},
+    updatedAt: ${hasUpdatedAt},
+    deletedAt: ${hasDeletedAt},
     // schema: 'cp',
 })
 export class ${tableClassName} extends Model {

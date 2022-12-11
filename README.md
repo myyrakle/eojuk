@@ -123,23 +123,23 @@ export class tb_user extends Model {
 
 ### 명령줄 옵션
 
--   -i --in: 입력파일들에 대한 경로입니다.
--   -dir --outdir: 파일을 출력할 경로입니다.
--   -db --database: 데이터베이스 형식입니다. 기본값은 postgresql입니다.
--   -o --orm: 출력할 ORM 형식입니다. 기본값은 sequelize-typescript입니다.
--   -cn --classname: 출력할 클래스명 형식입니다.
--   -fn --fieldname: 출력할 클래스의 필드명 형식입니다.
+- -i --in: 입력파일들에 대한 경로입니다.
+- -dir --outdir: 파일을 출력할 경로입니다.
+- -db --database: 데이터베이스 형식입니다. 기본값은 postgresql입니다.
+- -o --orm: 출력할 ORM 형식입니다. 기본값은 sequelize-typescript입니다.
+- -cn --classname: 출력할 클래스명 형식입니다.
+- -fn --fieldname: 출력할 클래스의 필드명 형식입니다.
 
 ### 지원되는 입력형식
 
--   PostgreSQL
--   MySQL
+- PostgreSQL
+- MySQL
 
 ### 지원되는 출력형식
 
--   sequelize (예정)
--   sequelize-typescript
--   typeorm
+- sequelize (예정)
+- sequelize-typescript
+- typeorm
 
 ### 사용례
 
@@ -156,5 +156,5 @@ eojuk -i .\test\mysql\test1.sql -dir .\test\ -db mysql  -o typeorm
 postgresql 쿼리를 sequelize-typescript 형식으로 내보내기
 
 ```
-eojuk -i .\test\pg\test1.sql -dir .\test\ -db pg  -o sequezlie-typescript
+eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript
 ```
