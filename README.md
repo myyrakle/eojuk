@@ -140,11 +140,12 @@ export class tb_user extends Model {
 - PostgreSQL
 - MySQL
 
-### 지원되는 출력형식
+### 지원되는 출력형식 (-o option)
 
 - sequelize (예정)
 - sequelize-typescript
 - typeorm
+- jpa
 
 ### 사용례
 
@@ -161,5 +162,7 @@ eojuk -i .\test\mysql\test1.sql -dir .\test\ -db mysql  -o typeorm
 postgresql 쿼리를 sequelize-typescript 형식으로 내보내기
 
 ```
-eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript --schame foo
+eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript --schema foo
 ```
+
+eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg -o jpa --schema foo
