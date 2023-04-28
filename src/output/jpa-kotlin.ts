@@ -65,7 +65,7 @@ export class JPAKotlinEmitter implements IEmmiter {
       : `\n${TAB}@Nullable`;
 
     return `${primaryKey}${autoIncrement}${columnAnnotation}${notNullAnnotaion}${comment}${defaultValue}${createdAt}${updatedAt}${deletedAt}
-${TAB}${columnFieldName}: ${column.javaType},`;
+${TAB}var ${columnFieldName}: ${column.javaType}? = null`;
   }
 
   // 테이블 클래스 코드 생성
@@ -83,7 +83,7 @@ ${TAB}${columnFieldName}: ${column.javaType},`;
 
     return `@Entity()
 @Table(name = "\\"${table.tableName}\\""${schema})
-data class ${tableClassName} {
+class ${tableClassName} {
 ${table.columns.map((column) => this.generateColumn(column)).join("\n")}
 }`;
   }
