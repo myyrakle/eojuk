@@ -9,15 +9,15 @@ import { escapeDoubleQuote } from "../util.ts/escape";
 
 const importTemplate = `
 // If under EE 9, change jakarta to javax
-import jakarta.annotation.*;
-import jakarta.persistence.*;
-import jakarta.persistence.Table;
+import jakarta.annotation.*
+import jakarta.persistence.*
+import jakarta.persistence.Table
 
-import org.hibernate.annotations.*;
-import java.time.LocalDateTime;
+import org.hibernate.annotations.*
+import java.time.LocalDateTime
 `;
 
-export class JPAEmitter implements IEmmiter {
+export class JPAKotlinEmitter implements IEmmiter {
   private option: IOption;
 
   // 컬럼 필드 코드 생성
@@ -65,7 +65,7 @@ export class JPAEmitter implements IEmmiter {
       : `\n${TAB}@Nullable`;
 
     return `${primaryKey}${autoIncrement}${columnAnnotation}${notNullAnnotaion}${comment}${defaultValue}${createdAt}${updatedAt}${deletedAt}
-${TAB}${column.javaType} ${columnFieldName};`;
+${TAB}var ${columnFieldName}: ${column.javaType}? = null`;
   }
 
   // 테이블 클래스 코드 생성
@@ -83,7 +83,7 @@ ${TAB}${column.javaType} ${columnFieldName};`;
 
     return `@Entity()
 @Table(name = "\\"${table.tableName}\\""${schema})
-public class ${tableClassName} {
+class ${tableClassName} {
 ${table.columns.map((column) => this.generateColumn(column)).join("\n")}
 }`;
   }
