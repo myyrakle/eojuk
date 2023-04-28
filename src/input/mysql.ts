@@ -154,7 +154,7 @@ export class MySQLParser implements IParser {
           return "Double";
       }
     } else if (["bool", "boolean"].includes(typename.toLocaleLowerCase())) {
-      return "boolean";
+      return "Boolean";
     } else if (
       [
         "char",
