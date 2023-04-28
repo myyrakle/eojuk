@@ -81,7 +81,7 @@ export class PostgreSQLParser implements IParser {
     ) {
       return "LocalDateTime";
     } else {
-      return "string";
+      return "String";
     }
   }
 
