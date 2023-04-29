@@ -111,5 +111,7 @@ package-lock.json
 /test/*.js
 /test/*.java
 /test/*.kt
+/test/*.py
+/test/*.cs
 
 .npmrc

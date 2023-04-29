@@ -165,3 +165,6 @@ postgresql 쿼리를 sequelize-typescript 형식으로 내보내기
 ```
 eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript --schema foo
 ```
+
+
+eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sqlalchemy --schema foo
