@@ -16,7 +16,7 @@ import org.hibernate.annotations.*;
 import java.time.LocalDateTime;
 `;
 
-export class JPAEmitter implements IEmmiter {
+export class DapperEmitter implements IEmmiter {
   private option: IOption;
 
   // 컬럼 필드 코드 생성
