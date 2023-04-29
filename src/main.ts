@@ -13,6 +13,7 @@ import { IOption } from "./types/option";
 import { NAME_CASE_LIST } from "./types/name-case";
 import { JPAEmitter } from "./output/jpa-java";
 import { JPAKotlinEmitter } from "./output/jpa-kotlin";
+import { SQLAlchemyEmitter } from "./lib";
 
 export {
   IEmmiter,
@@ -173,6 +174,10 @@ async function main() {
     case "jpa-kotlin":
       emitter = new JPAKotlinEmitter();
       file_extension = ".kt";
+      break;
+    case "sqlalchemy":
+      emitter = new SQLAlchemyEmitter();
+      file_extension = ".py";
       break;
     default:
       console.error("!! 지원되지 않는 ORM입니다.");
