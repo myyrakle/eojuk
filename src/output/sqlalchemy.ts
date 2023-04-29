@@ -61,8 +61,7 @@ export class SQLAlchemyEmitter implements IEmmiter {
     return `class ${tableClassName}(Base):
 ${TAB}__tablename__ = "${table.tableName}"
 
-${table.columns.map((column) => this.generateColumn(column)).join("\n")}
-}`;
+${table.columns.map((column) => this.generateColumn(column)).join("\n")}`;
   }
 
   emit(
