@@ -102,7 +102,7 @@ export class PostgreSQLParser implements IParser {
           return "Integer";
         case "int8":
         case "bigint":
-          return "BigInt";
+          return "BigInteger";
       }
     } else if (
       ["timestamp", "timestamptz", "date"].includes(

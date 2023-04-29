@@ -192,7 +192,7 @@ export class MySQLParser implements IParser {
         case "int":
           return "Integer";
         case "bigint":
-          return "BigInt";
+          return "BigInteger";
       }
     } else if (
       ["decimal", "float", "double"].includes(typename.toLocaleLowerCase())
