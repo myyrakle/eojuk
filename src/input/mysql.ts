@@ -57,6 +57,7 @@ export class MySQLParser implements IParser {
             dbType,
             tsType: this.convertDbTypeToTsType(dbType),
             javaType: this.convertDbTypeToJavaType(dbType),
+            pythonType: this.convertDbTypeToSQLAlchemyType(dbType),
             isNotNull,
             isPrimaryKey,
             default: defaultValue,
@@ -172,6 +173,57 @@ export class MySQLParser implements IParser {
       )
     ) {
       return "LocalDateTime";
+    } else {
+      return "String";
+    }
+  }
+
+  // 데이터베이스의 컬럼타입을 파이썬 타입으로 변환
+  public convertDbTypeToSQLAlchemyType(typename: string): string {
+    if (
+      ["tinyint", "smallint", "mediumint", "int", "bigint"].includes(
+        typename.toLocaleLowerCase()
+      )
+    ) {
+      switch (typename.toLocaleLowerCase()) {
+        case "tinyint":
+        case "smallint":
+        case "mediumint":
+        case "int":
+          return "Integer";
+        case "bigint":
+          return "BigInteger";
+      }
+    } else if (
+      ["decimal", "float", "double"].includes(typename.toLocaleLowerCase())
+    ) {
+      switch (typename.toLocaleLowerCase()) {
+        case "decimal":
+          return "BigDecimal";
+        case "float":
+          return "Float";
+        case "double":
+          return "Double";
+      }
+    } else if (["bool", "boolean"].includes(typename.toLocaleLowerCase())) {
+      return "Boolean";
+    } else if (
+      [
+        "char",
+        "varchar",
+        "tinytext",
+        "text",
+        "mediumtext",
+        "longtext",
+      ].includes(typename.toLocaleLowerCase())
+    ) {
+      return "String";
+    } else if (
+      ["date", "time", "datetime", "timestamp", "year"].includes(
+        typename.toLocaleLowerCase()
+      )
+    ) {
+      return "DateTime";
     } else {
       return "String";
     }
