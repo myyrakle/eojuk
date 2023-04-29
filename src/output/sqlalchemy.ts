@@ -42,11 +42,9 @@ export class SQLAlchemyEmitter implements IEmmiter {
       ? `, comment="${escapeDoubleQuote(column.comment)}"`
       : "";
 
-    const notNull = column.isNotNull
-      ? `, nullable = False`
-      : `, nullable = True`;
+    const notNull = column.isNotNull ? `, nullable=False` : `, nullable=True`;
 
-    const type = ``;
+    const type = column.pythonType;
 
     return `${TAB}${columnFieldName} = Column(${type}${primaryKey}${autoIncrement}${notNull}${defaultValue}${comment})`;
   }
@@ -63,7 +61,7 @@ export class SQLAlchemyEmitter implements IEmmiter {
     return `class ${tableClassName}(Base):
 ${TAB}__tablename__ = "${table.tableName}"
 
-${TAB}${table.columns.map((column) => this.generateColumn(column)).join("\n")}
+${table.columns.map((column) => this.generateColumn(column)).join("\n")}
 }`;
   }
 
