@@ -8,13 +8,10 @@ import { TAB } from "../util.ts/tab";
 import { escapeDoubleQuote } from "../util.ts/escape";
 
 const importTemplate = `
-// If under EE 9, change jakarta to javax
-import jakarta.annotation.*;
-import jakarta.persistence.*;
-import jakarta.persistence.Table;
+from sqlalchemy import String, Integer, Column
+from sqlalchemy.orm import declarative_base
 
-import org.hibernate.annotations.*;
-import java.time.LocalDateTime;
+Base = declarative_base()
 `;
 
 export class SQLAlchemyEmitter implements IEmmiter {
@@ -27,45 +24,30 @@ export class SQLAlchemyEmitter implements IEmmiter {
       column.name
     );
 
-    const hasCreatedAt = column.name == this.option.autoAddCreatedAt;
-    const hasUpdatedAt = column.name == this.option.autoAddUpdatedAt;
-    // const hasDeletedAt = column.name == this.option.autoAddDeletedAt
-
     // PrimaryKey 강제 추가 옵션
     if (column.name == this.option.autoAddPrimaryKey) {
       column.isPrimaryKey = true;
     }
 
-    const createdAt = hasCreatedAt ? `\n${TAB}@CreationTimestamp` : "";
-    const updatedAt = hasUpdatedAt ? `\n${TAB}@UpdateTimestamp` : "";
-    const deletedAt = ""; // hibernate에는 해당 기능이 없음
+    const primaryKey = column.isPrimaryKey ? `, primary_key=True` : "";
 
-    const primaryKey = column.isPrimaryKey ? `\n${TAB}@Id` : "";
-
-    const autoIncrement = column.isAutoIncrement
-      ? `\n${TAB}@GeneratedValue(strategy = GenerationType.IDENTITY)`
-      : "";
+    const autoIncrement = column.isAutoIncrement ? `, autoincrement=True` : "";
 
     const defaultValue = column.default
-      ? `\n${TAB}@ColumnDefault("${escapeDoubleQuote(column.default)}")`
+      ? `, default="${escapeDoubleQuote(column.default)}"`
       : "";
 
     const comment = column.comment
-      ? `\n${TAB}@Comment("${escapeDoubleQuote(column.comment)}")`
+      ? `, comment="${escapeDoubleQuote(column.comment)}"`
       : "";
 
-    //const dataType = this.dbTypeToDataType(column.dbType);
+    const notNull = column.isNotNull
+      ? `, nullable = False`
+      : `, nullable = True`;
 
-    const columnAnnotation = `\n${TAB}@Column(name = "${escapeDoubleQuote(
-      column.name
-    )}")`;
+    const type = ``;
 
-    const notNullAnnotaion = column.isNotNull
-      ? `\n${TAB}@Nonnull`
-      : `\n${TAB}@Nullable`;
-
-    return `${primaryKey}${autoIncrement}${columnAnnotation}${notNullAnnotaion}${comment}${defaultValue}${createdAt}${updatedAt}${deletedAt}
-${TAB}${column.javaType} ${columnFieldName};`;
+    return `${TAB}${columnFieldName} = Column(${type}${primaryKey}${autoIncrement}${notNull}${defaultValue}${comment})`;
   }
 
   // 테이블 클래스 코드 생성
@@ -77,14 +59,10 @@ ${TAB}${column.javaType} ${columnFieldName};`;
       table.tableName
     );
 
-    const schema = hasDatabaseName
-      ? `, schema = "\\"${this.option.databaseName}\\""`
-      : "";
+    return `class ${tableClassName}(Base):
+${TAB}__tablename__ = "${table.tableName}"
 
-    return `@Entity()
-@Table(name = "\\"${table.tableName}\\""${schema})
-public class ${tableClassName} {
-${table.columns.map((column) => this.generateColumn(column)).join("\n")}
+${TAB}${table.columns.map((column) => this.generateColumn(column)).join("\n")}
 }`;
   }
 
