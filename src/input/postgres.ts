@@ -149,6 +149,7 @@ export class PostgreSQLParser implements IParser {
             dbType: normalizedDbType,
             tsType: this.convertDbTypeToTsType(normalizedDbType),
             javaType: this.convertDbTypeToJavaType(normalizedDbType),
+            pythonType: this.convertDbTypeToJavaType(normalizedDbType),
             isNotNull,
             isPrimaryKey,
             default: defaultValue,

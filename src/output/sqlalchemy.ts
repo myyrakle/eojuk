@@ -8,7 +8,8 @@ import { TAB } from "../util.ts/tab";
 import { escapeDoubleQuote } from "../util.ts/escape";
 
 const importTemplate = `
-from sqlalchemy import String, Integer, Column
+from sqlalchemy import Column
+from sqlalchemy import String, Integer, Double, Float, BigInt, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
