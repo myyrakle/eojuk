@@ -85,6 +85,36 @@ export class PostgreSQLParser implements IParser {
     }
   }
 
+  private convertDbTypeToSQLAlchemyType(typename: string): string {
+    if (["text", "varchar"].includes(typename.toLocaleLowerCase())) {
+      return "String";
+    } else if (["bool", "boolean"].includes(typename.toLocaleLowerCase())) {
+      return "Boolean";
+    } else if (
+      ["int", "int2", "int4", "int8", "bigint"].includes(
+        typename.toLocaleLowerCase()
+      )
+    ) {
+      switch (typename.toLocaleLowerCase()) {
+        case "int":
+        case "int2":
+        case "int4":
+          return "Integer";
+        case "int8":
+        case "bigint":
+          return "Bigint";
+      }
+    } else if (
+      ["timestamp", "timestamptz", "date"].includes(
+        typename.toLocaleLowerCase()
+      )
+    ) {
+      return "DateTime";
+    } else {
+      return "String";
+    }
+  }
+
   // 파싱
   parse(sql: string): Table[] {
     const parsedList = astParse(sql);
@@ -149,7 +179,7 @@ export class PostgreSQLParser implements IParser {
             dbType: normalizedDbType,
             tsType: this.convertDbTypeToTsType(normalizedDbType),
             javaType: this.convertDbTypeToJavaType(normalizedDbType),
-            pythonType: this.convertDbTypeToJavaType(normalizedDbType),
+            pythonType: this.convertDbTypeToSQLAlchemyType(normalizedDbType),
             isNotNull,
             isPrimaryKey,
             default: defaultValue,
