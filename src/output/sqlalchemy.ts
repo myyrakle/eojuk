@@ -7,8 +7,7 @@ import { convertNameCaseByOption } from "../util.ts/name";
 import { TAB } from "../util.ts/tab";
 import { escapeDoubleQuote } from "../util.ts/escape";
 
-const importTemplate = `
-from sqlalchemy import Column
+const importTemplate = `from sqlalchemy import Column
 from sqlalchemy import String, Integer, Double, Float, BigInteger, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 

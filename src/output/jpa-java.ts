@@ -7,8 +7,7 @@ import { convertNameCaseByOption } from "../util.ts/name";
 import { TAB } from "../util.ts/tab";
 import { escapeDoubleQuote } from "../util.ts/escape";
 
-const importTemplate = `
-// If under EE 9, change jakarta to javax
+const importTemplate = `// If under EE 9, change jakarta to javax
 import jakarta.annotation.*;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
