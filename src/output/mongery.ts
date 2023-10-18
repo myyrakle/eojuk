@@ -21,42 +21,27 @@ export class Mongery implements IEmmiter {
 
   // 컬럼 필드 코드 생성
   private generateColumn(column: Column) {
-    const columnFieldName = convertNameCaseByOption(
-      this.option.outputFieldNameCase,
-      column.name
-    );
+    let isPrimaryKey = false;
+
+    let fieldName = convertNameCaseByOption("PASCAL", column.name);
+
+    if (column.name === "_id") {
+      fieldName = "ID";
+      isPrimaryKey = true;
+    }
+
+    const bsonName = convertNameCaseByOption("CAMEL", column.name);
 
     // PrimaryKey 강제 추가 옵션
     if (column.name == this.option.autoAddPrimaryKey) {
       column.isPrimaryKey = true;
     }
 
-    const primaryKey = column.isPrimaryKey ? `\n${TAB}@Id` : "";
+    const omitEmpty = isPrimaryKey ? `,omitempty` : "";
 
-    const autoIncrement = column.isAutoIncrement
-      ? `\n${TAB}@GeneratedValue(strategy = GenerationType.IDENTITY)`
-      : "";
+    const bsonTag = `\`bson:"${bsonName}${omitEmpty}"\``;
 
-    const defaultValue = column.default
-      ? `\n${TAB}@ColumnDefault("${escapeDoubleQuote(column.default)}")`
-      : "";
-
-    const comment = column.comment
-      ? `\n${TAB}@Comment("${escapeDoubleQuote(column.comment)}")`
-      : "";
-
-    //const dataType = this.dbTypeToDataType(column.dbType);
-
-    const columnAnnotation = `\n${TAB}@Column(name = "${escapeDoubleQuote(
-      column.name
-    )}")`;
-
-    const notNullAnnotaion = column.isNotNull
-      ? `\n${TAB}@Nonnull`
-      : `\n${TAB}@Nullable`;
-
-    return `${primaryKey}${autoIncrement}${columnAnnotation}${notNullAnnotaion}${comment}${defaultValue}${createdAt}${updatedAt}${deletedAt}
-${TAB}${column.javaType} ${columnFieldName};`;
+    return `${TAB}${fieldName} ${column.dbType} ${bsonTag} // ${column.comment}`;
   }
 
   // 테이블 클래스 코드 생성
