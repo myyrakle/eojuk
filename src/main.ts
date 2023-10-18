@@ -13,6 +13,7 @@ import { IOption } from "./types/option";
 import { NAME_CASE_LIST } from "./types/name-case";
 import { JPAEmitter } from "./output/jpa-java";
 import { JPAKotlinEmitter } from "./output/jpa-kotlin";
+import { Mongery } from "./output/mongery";
 import { SQLAlchemyEmitter } from "./lib";
 
 export {
@@ -178,6 +179,10 @@ async function main() {
     case "sqlalchemy":
       emitter = new SQLAlchemyEmitter();
       file_extension = ".py";
+      break;
+    case "mongery":
+      emitter = new Mongery();
+      file_extension = ".go";
       break;
     default:
       console.error("!! 지원되지 않는 ORM입니다.");

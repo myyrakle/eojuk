@@ -1,6 +1,6 @@
 # eojuk
 
-![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.9.0-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
+![](https://img.shields.io/badge/language-Typescript-yellow) ![](https://img.shields.io/badge/version-0.10.1-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
 어죽은 테이블 작성 쿼리를 ORM 코드들로 변환해주는 유용한 도구입니다.
 기존 RAW Query를 마이그레이션하거나 ERD 도구에서 추출해낸 쿼리를 기반으로 엔티티 코드를 작성하기 좋습니다.
@@ -148,6 +148,7 @@ export class tb_user extends Model {
 - jpa
 - jpa-kotlin
 - sqlalchemy
+- mongery (go mongodb)
 
 ### 사용례
 
@@ -165,4 +166,12 @@ postgresql 쿼리를 sequelize-typescript 형식으로 내보내기
 
 ```
 eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript --schema foo
+```
+
+#####
+
+postgresql 쿼리를 mongery 형식으로 내보내기
+
+```
+eojuk -i .\test\pg\test_for_go.sql -dir .\test\ -db pg  -o mongery --schema foo
 ```
