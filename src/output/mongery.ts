@@ -9,9 +9,22 @@ import { TAB } from "../util.ts/tab";
 export class Mongery implements IEmmiter {
   private option: IOption;
 
+  private replaceType(type: string): string {
+    switch (type.toLowerCase()) {
+      case "time":
+        return "time.Time";
+      case "objectid":
+        return "primitive.ObjectID";
+      default:
+        return type;
+    }
+  }
+
   // 컬럼 필드 코드 생성
   private generateColumn(column: Column) {
     let isPrimaryKey = false;
+
+    column.dbType = this.replaceType(column.dbType);
 
     let fieldName = convertNameCaseByOption("PASCAL", column.name);
 
@@ -27,11 +40,13 @@ export class Mongery implements IEmmiter {
       column.isPrimaryKey = true;
     }
 
-    const omitEmpty = isPrimaryKey ? `,omitempty` : "";
+    const omitEmpty = isPrimaryKey || !column.isNotNull ? `,omitempty` : "";
 
     const bsonTag = `\`bson:"${bsonName}${omitEmpty}"\``;
 
-    return `${TAB}${fieldName} ${column.dbType} ${bsonTag} // ${column.comment}`;
+    const fieldType = column.isNotNull ? column.dbType : `*${column.dbType}`;
+
+    return `${TAB}${fieldName} ${fieldType} ${bsonTag} // ${column.comment}`;
   }
 
   // 테이블 클래스 코드 생성

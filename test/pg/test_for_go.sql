@@ -1,12 +1,12 @@
 CREATE TABLE "trade_history" (
-	"_id"	int		NOT NULL,
-	"sellerID"	int		NULL,
-	"buyerID"	int		NULL,
-	"sell_offer_id"	int		NULL,
-	"buy_offer_id"	int		NULL,
-	"created_at"	time.Time		NULL,
-	"updated_at"	timestamptz  	NULL,
-	"deleted_at"	timestamptz		NULL
+	"_id"	ObjectID		NOT NULL,
+	"sellerID"	int		NOT NULL,
+	"buyerID"	int		NOT NULL,
+	"sell_offer_id"	int		NOT NULL,
+	"buy_offer_id"	int		NOT NULL,
+	"created_at"	Time	NOT 	NULL,
+	"updated_at"	Time  	NOT NULL,
+	"deleted_at"	Time		NOT NULL
 );
 
 COMMENT ON COLUMN "nft_trade_history"."id" IS '기본키';
