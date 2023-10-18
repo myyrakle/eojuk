@@ -13,7 +13,7 @@ import { IOption } from "./types/option";
 import { NAME_CASE_LIST } from "./types/name-case";
 import { JPAEmitter } from "./output/jpa-java";
 import { JPAKotlinEmitter } from "./output/jpa-kotlin";
-import { Mongery } from "./output/mongery";
+import { MongeryEmitter } from "./output/mongery";
 import { SQLAlchemyEmitter } from "./lib";
 
 export {
@@ -181,7 +181,7 @@ async function main() {
       file_extension = ".py";
       break;
     case "mongery":
-      emitter = new Mongery();
+      emitter = new MongeryEmitter();
       file_extension = ".go";
       break;
     default:

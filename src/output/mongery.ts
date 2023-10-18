@@ -6,7 +6,7 @@ import Table from "../types/table";
 import { convertNameCaseByOption } from "../util.ts/name";
 import { TAB } from "../util.ts/tab";
 
-export class Mongery implements IEmmiter {
+export class MongeryEmitter implements IEmmiter {
   private option: IOption;
 
   private replaceType(type: string): string {

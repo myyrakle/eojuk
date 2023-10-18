@@ -7,6 +7,7 @@ import { IEmmiter } from "./interfaces/emitter";
 import { IParser } from "./interfaces/parser";
 import { MySQLParser } from "./input/mysql";
 import { TypeOrmEmitter } from "./output/typeorm";
+import { MongeryEmitter } from "./output/mongery";
 
 export {
   IEmmiter,
@@ -18,4 +19,5 @@ export {
   IParser,
   MySQLParser,
   PostgreSQLParser,
+  MongeryEmitter,
 };
