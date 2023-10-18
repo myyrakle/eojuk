@@ -33,7 +33,10 @@ export class MongeryEmitter implements IEmmiter {
       isPrimaryKey = true;
     }
 
-    const bsonName = convertNameCaseByOption("CAMEL", column.name);
+    const bsonName =
+      column.name == "_id"
+        ? "_id"
+        : convertNameCaseByOption("CAMEL", column.name);
 
     // PrimaryKey 강제 추가 옵션
     if (column.name == this.option.autoAddPrimaryKey) {
