@@ -26,18 +26,10 @@ export class Mongery implements IEmmiter {
       column.name
     );
 
-    const hasCreatedAt = column.name == this.option.autoAddCreatedAt;
-    const hasUpdatedAt = column.name == this.option.autoAddUpdatedAt;
-    // const hasDeletedAt = column.name == this.option.autoAddDeletedAt
-
     // PrimaryKey 강제 추가 옵션
     if (column.name == this.option.autoAddPrimaryKey) {
       column.isPrimaryKey = true;
     }
-
-    const createdAt = hasCreatedAt ? `\n${TAB}@CreationTimestamp` : "";
-    const updatedAt = hasUpdatedAt ? `\n${TAB}@UpdateTimestamp` : "";
-    const deletedAt = ""; // hibernate에는 해당 기능이 없음
 
     const primaryKey = column.isPrimaryKey ? `\n${TAB}@Id` : "";
 
@@ -69,20 +61,11 @@ ${TAB}${column.javaType} ${columnFieldName};`;
 
   // 테이블 클래스 코드 생성
   private generateTableCode(table: Table) {
-    const hasDatabaseName = this.option.databaseName != null;
+    const tableClassName = convertNameCaseByOption("PASCAL", table.tableName);
 
-    const tableClassName = convertNameCaseByOption(
-      this.option.outputClassNameCase,
-      table.tableName
-    );
-
-    const schema = hasDatabaseName
-      ? `, schema = "\\"${this.option.databaseName}\\""`
-      : "";
-
-    return `@Entity()
-@Table(name = "\\"${table.tableName}\\""${schema})
-public class ${tableClassName} {
+    return `// ${tableClassName}
+// @Entity
+type ${tableClassName} struct {
 ${table.columns.map((column) => this.generateColumn(column)).join("\n")}
 }`;
   }
