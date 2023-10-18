@@ -5,16 +5,6 @@ import Source from "../types/source";
 import Table from "../types/table";
 import { convertNameCaseByOption } from "../util.ts/name";
 import { TAB } from "../util.ts/tab";
-import { escapeDoubleQuote } from "../util.ts/escape";
-
-const importTemplate = `// If under EE 9, change jakarta to javax
-import jakarta.annotation.*;
-import jakarta.persistence.*;
-import jakarta.persistence.Table;
-
-import org.hibernate.annotations.*;
-import java.time.LocalDateTime;
-`;
 
 export class Mongery implements IEmmiter {
   private option: IOption;
@@ -68,16 +58,15 @@ ${table.columns.map((column) => this.generateColumn(column)).join("\n")}
     if (option?.sourceSplit) {
       return tables.map((table) => ({
         sourceName: table.tableName,
-        source: importTemplate + "\n" + this.generateTableCode(table),
+        source: this.generateTableCode(table),
       }));
     } else {
       return [
         {
           sourceName: "all",
-          source:
-            importTemplate +
-            "\n" +
-            tables.map((table) => this.generateTableCode(table)).join("\n\n"),
+          source: tables
+            .map((table) => this.generateTableCode(table))
+            .join("\n\n"),
         },
       ];
     }

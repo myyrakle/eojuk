@@ -172,5 +172,5 @@ eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o sequelize-typescript --sche
 postgresql 쿼리를 mongery 형식으로 내보내기
 
 ```
-eojuk -i .\test\pg\test2.sql -dir .\test\ -db pg  -o mongery --schema foo
+eojuk -i .\test\pg\test_for_go.sql -dir .\test\ -db pg  -o mongery --schema foo
 ```
