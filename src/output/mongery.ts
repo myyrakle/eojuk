@@ -6,6 +6,16 @@ import Table from "../types/table";
 import { convertNameCaseByOption } from "../util.ts/name";
 import { TAB } from "../util.ts/tab";
 
+// 첫번째 문자만 대문자로 변경
+function convertToPascal(original: string) {
+  return original.charAt(0).toUpperCase() + original.slice(1);
+}
+
+// 첫번째 문자만 소문자로 변경
+function convertToCamel(original: string) {
+  return original.charAt(0).toLowerCase() + original.slice(1);
+}
+
 export class MongeryEmitter implements IEmmiter {
   private option: IOption;
 
@@ -26,17 +36,14 @@ export class MongeryEmitter implements IEmmiter {
 
     column.dbType = this.replaceType(column.dbType);
 
-    let fieldName = convertNameCaseByOption("PASCAL", column.name);
+    let fieldName = convertToPascal(column.name);
 
     if (column.name === "_id") {
       fieldName = "ID";
       isPrimaryKey = true;
     }
 
-    const bsonName =
-      column.name == "_id"
-        ? "_id"
-        : convertNameCaseByOption("CAMEL", column.name);
+    const bsonName = convertToCamel(column.name);
 
     // PrimaryKey 강제 추가 옵션
     if (column.name == this.option.autoAddPrimaryKey) {
